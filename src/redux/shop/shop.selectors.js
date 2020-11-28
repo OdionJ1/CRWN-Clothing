@@ -13,6 +13,14 @@ export const selectCollectionsForPreview = createSelector (
         return collections[key]}) 
 )
 
+// export const existingRoute = collecttionUrlParam => createSelector(
+//     [selectCollections],
+//     collections => {
+//         Object.keys(collections)
+//     }
+// )
+
+
 export const selectCollection = collectionUrlParam => createSelector(
     [selectCollections],
     collections => collections[collectionUrlParam]
