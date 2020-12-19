@@ -10,8 +10,16 @@ import { connect } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 import { selectCurrentUser } from '../redux/user/user.selector';
 import { selectCartHidden } from '../redux/cart/cart.selectors'
+import { useDispatch } from 'react-redux'
+import { clearAllItemsFromCart } from '../redux/cart/cart.actions'
 
 let Header = ({ currentUser, hidden }) => {
+    const dispatch = useDispatch()
+
+    const signOut = async () => {
+        await auth.signOut()
+        dispatch(clearAllItemsFromCart()) 
+    }
     return (
         <header className="header">
             {/* <h4>{currentUser.displayName}</h4> */}
@@ -26,7 +34,7 @@ let Header = ({ currentUser, hidden }) => {
                     Contact
                 </Link>
                 {currentUser? 
-                <div className="option" onClick={() => auth.signOut()}>Sign out</div>
+                <div className="option" onClick={() => signOut()}>Sign out</div>
                  : 
                 <Link className="option" to ="/signin">
                     Sign in

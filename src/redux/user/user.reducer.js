@@ -1,5 +1,6 @@
 const INITIAL_STATE = {
-    currentUser: null
+    currentUser: null,
+    userCartItems: {}
 }
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -8,6 +9,11 @@ const userReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 currentUser: action.payload
+            }
+        case 'UPDATE_USER_CART_ITEMS':
+            return {
+                ...state,
+                userCartItems: {...state.userCartItems, [state.currentUser.id]: action.payload }
             }
 
         default:

@@ -10,12 +10,15 @@ import './App.css';
 import { auth, createUserProfileDocument } from './firebase/firebaseUtils';
 import { connect } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
-import { selectCurrentUser } from './redux/user/user.selector'
-import { setCurrentUser } from './redux/user/user.actions'
+import { selectCurrentUser, selectUserCartItems } from './redux/user/user.selector'
+import { setCurrentUser, updateUserCartItems } from './redux/user/user.actions'
+import { findUserCartItems, clearAllItemsFromCart } from './redux/cart/cart.actions'
+import { useSelector } from 'react-redux'
 
 
-let App = ({ setCurrentUser, currentUser }) => {
+let App = ({ setCurrentUser, currentUser, findUserCartItems, userCartItems, updateUserCartItems, clearAllItemsFromCart }) => {
   let unsubscribeFromAuth = null;
+  const cartItems = useSelector(({ cart: {cartItems} }) => cartItems)
   
   useEffect(() => {
     //ComponentDidMount
@@ -42,6 +45,19 @@ let App = ({ setCurrentUser, currentUser }) => {
     }
   }, [])
 
+  useEffect(() => {
+    if(currentUser){
+      updateUserCartItems(cartItems)
+    }
+
+  }, [cartItems])
+
+  useEffect(() => {
+    if(currentUser){
+      findUserCartItems(userCartItems, currentUser)
+    }
+  },[currentUser])
+
   return (
     <div className="App">
       <Header />
@@ -56,11 +72,15 @@ let App = ({ setCurrentUser, currentUser }) => {
 }
 
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser
+  currentUser: selectCurrentUser,
+  userCartItems: selectUserCartItems
 })
 
 const mapDispatchToProps = dispatch => ({
-  setCurrentUser: user => dispatch(setCurrentUser(user))
+  setCurrentUser: user => dispatch(setCurrentUser(user)),
+  findUserCartItems: (userCartItems, currentUser) => dispatch(findUserCartItems(userCartItems, currentUser)),
+  updateUserCartItems: cartItems => dispatch(updateUserCartItems(cartItems)),
+  clearAllItemsFromCart: () => dispatch(clearAllItemsFromCart())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
